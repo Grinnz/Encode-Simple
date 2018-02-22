@@ -103,8 +103,8 @@ exported.
   my $bytes = encode $encoding, $characters;
 
 Encodes the input string of characters into a byte string using C<$encoding>.
-Throws an exception if the input string contains characters that cannot be
-represented in C<$encoding>.
+Throws an exception if the input string contains characters that are not valid
+or possible to represent in C<$encoding>.
 
 =head2 encode_lax
 
@@ -120,7 +120,7 @@ encoding).
   my $characters = decode $encoding, $bytes;
 
 Decodes the input byte string into a string of characters using C<$encoding>.
-Throws an exception if the input bytes are not valid in C<$encoding>.
+Throws an exception if the input bytes are not valid for C<$encoding>.
 
 =head2 decode_lax
 
