@@ -12,6 +12,9 @@ our @EXPORT = qw(encode decode);
 our @EXPORT_OK = qw(encode_lax decode_lax);
 our %EXPORT_TAGS = (all => [@EXPORT, @EXPORT_OK], strict => \@EXPORT, lax => \@EXPORT_OK);
 
+use constant MASK_STRICT => Encode::FB_CROAK | Encode::LEAVE_SRC;
+use constant MASK_LAX => Encode::FB_DEFAULT | Encode::LEAVE_SRC;
+
 my %ENCODINGS;
 
 sub encode {
@@ -19,7 +22,7 @@ sub encode {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->encode("$input", Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
+  { local $@; unless (eval { $output = $obj->encode("$input", MASK_STRICT); 1 }) { $error = $@ || 'Error' } }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -29,7 +32,7 @@ sub encode_lax {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->encode("$input", Encode::FB_DEFAULT | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
+  { local $@; unless (eval { $output = $obj->encode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' } }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -39,7 +42,7 @@ sub decode {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->decode("$input", Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
+  { local $@; unless (eval { $output = $obj->decode("$input", MASK_STRICT); 1 }) { $error = $@ || 'Error' } }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -49,7 +52,7 @@ sub decode_lax {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->decode("$input", Encode::FB_DEFAULT | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
+  { local $@; unless (eval { $output = $obj->decode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' } }
   _rethrow($error) if defined $error;
   return $output;
 }
