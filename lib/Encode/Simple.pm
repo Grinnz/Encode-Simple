@@ -10,28 +10,43 @@ our $VERSION = '0.001';
 
 our @EXPORT = qw(encode decode);
 
+my %ENCODINGS;
+
 sub encode {
   my ($encoding, $input, $replace) = @_;
+  return undef unless defined $input;
+  my $obj = _find_encoding($encoding);
   my $mask = Encode::LEAVE_SRC | ($replace ? Encode::FB_DEFAULT : Encode::FB_CROAK);
   my ($output, $error);
-  { local $@; unless (eval { $output = Encode::encode($encoding, $input, $mask); 1 }) { $error = $@ || 'Error' } }
-  if (defined $error) {
-    $error =~ s/ at .+? line [0-9]+\.\n\z//;
-    Carp::croak($error);
-  }
+  { local $@; unless (eval { $output = $obj->encode("$input", $mask); 1 }) { $error = $@ || 'Error' } }
+  _rethrow($error) if defined $error;
   return $output;
 }
 
 sub decode {
   my ($encoding, $input, $replace) = @_;
+  return undef unless defined $input;
+  my $obj = _find_encoding($encoding);
   my $mask = Encode::LEAVE_SRC | ($replace ? Encode::FB_DEFAULT : Encode::FB_CROAK);
   my ($output, $error);
-  { local $@; unless (eval { $output = Encode::decode($encoding, $input, $mask); 1 }) { $error = $@ || 'Error' } }
-  if (defined $error) {
-    $error =~ s/ at .+? line [0-9]+\.\n\z//;
-    Carp::croak($error);
-  }
+  { local $@; unless (eval { $output = $obj->decode("$input", $mask); 1 }) { $error = $@ || 'Error' } }
+  _rethrow($error) if defined $error;
   return $output;
+}
+
+sub _find_encoding {
+  my ($encoding) = @_;
+  Carp::croak('Encoding name should not be undef') unless defined $encoding;
+  return $ENCODINGS{$encoding} if exists $ENCODINGS{$encoding};
+  my $obj = Encode::find_encoding($encoding);
+  Carp::croak("Unknown encoding '$encoding'") unless defined $obj;
+  return $ENCODINGS{$encoding} = $obj;
+}
+
+sub _rethrow {
+  my ($error) = @_;
+  $error =~ s/ at .+? line [0-9]+\.\n\z//;
+  Carp::croak($error);
 }
 
 1;
