@@ -7,8 +7,8 @@ Encode::Simple - Encode and decode text, simply
 =head1 SYNOPSIS
 
   use Encode::Simple qw(encode decode encode_lax decode_lax);
-  my $characters = decode 'UTF-8', $bytes;
-  my $characters = decode_lax 'cp1252', $bytes;
+  my $characters = decode 'cp1252', $bytes;
+  my $characters = decode_lax 'UTF-8', $bytes;
   my $bytes = encode 'shiftjis', $characters;
   my $bytes = encode_lax 'ascii', $characters;
 
