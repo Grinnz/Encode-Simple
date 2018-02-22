@@ -9,27 +9,47 @@ use Exporter 'import';
 our $VERSION = '0.001';
 
 our @EXPORT = qw(encode decode);
+our @EXPORT_OK = qw(encode_lax decode_lax);
+our %EXPORT_TAGS = (all => [@EXPORT, @EXPORT_OK], strict => \@EXPORT, lax => \@EXPORT_OK);
 
 my %ENCODINGS;
 
 sub encode {
-  my ($encoding, $input, $replace) = @_;
+  my ($encoding, $input) = @_;
   return undef unless defined $input;
-  my $obj = _find_encoding($encoding);
-  my $mask = Encode::LEAVE_SRC | ($replace ? Encode::FB_DEFAULT : Encode::FB_CROAK);
+  my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->encode("$input", $mask); 1 }) { $error = $@ || 'Error' } }
+  { local $@; unless (eval { $output = $obj->encode("$input", Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
+  _rethrow($error) if defined $error;
+  return $output;
+}
+
+sub encode_lax {
+  my ($encoding, $input) = @_;
+  return undef unless defined $input;
+  my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
+  my ($output, $error);
+  { local $@; unless (eval { $output = $obj->encode("$input", Encode::FB_DEFAULT | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
   _rethrow($error) if defined $error;
   return $output;
 }
 
 sub decode {
-  my ($encoding, $input, $replace) = @_;
+  my ($encoding, $input) = @_;
   return undef unless defined $input;
-  my $obj = _find_encoding($encoding);
-  my $mask = Encode::LEAVE_SRC | ($replace ? Encode::FB_DEFAULT : Encode::FB_CROAK);
+  my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->decode("$input", $mask); 1 }) { $error = $@ || 'Error' } }
+  { local $@; unless (eval { $output = $obj->decode("$input", Encode::FB_CROAK | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
+  _rethrow($error) if defined $error;
+  return $output;
+}
+
+sub decode_lax {
+  my ($encoding, $input) = @_;
+  return undef unless defined $input;
+  my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
+  my ($output, $error);
+  { local $@; unless (eval { $output = $obj->decode("$input", Encode::FB_DEFAULT | Encode::LEAVE_SRC); 1 }) { $error = $@ || 'Error' } }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -37,7 +57,6 @@ sub decode {
 sub _find_encoding {
   my ($encoding) = @_;
   Carp::croak('Encoding name should not be undef') unless defined $encoding;
-  return $ENCODINGS{$encoding} if exists $ENCODINGS{$encoding};
   my $obj = Encode::find_encoding($encoding);
   Carp::croak("Unknown encoding '$encoding'") unless defined $obj;
   return $ENCODINGS{$encoding} = $obj;
@@ -45,6 +64,7 @@ sub _find_encoding {
 
 sub _rethrow {
   my ($error) = @_;
+  die $error if ref $error or $error =~ m/\n(?!\z)/;
   $error =~ s/ at .+? line [0-9]+\.\n\z//;
   Carp::croak($error);
 }
@@ -57,9 +77,11 @@ Encode::Simple - Encode and decode text, simply
 
 =head1 SYNOPSIS
 
-  use Encode::Simple qw(encode decode);
+  use Encode::Simple qw(encode decode encode_lax decode_lax);
   my $characters = decode 'UTF-8', $bytes;
-  my $bytes = encode 'UTF-8', $characters;
+  my $characters = decode_lax 'cp1252', $bytes;
+  my $bytes = encode 'shiftjis', $characters;
+  my $bytes = encode_lax 'ascii', $characters;
 
 =head1 DESCRIPTION
 
@@ -69,28 +91,41 @@ L<Encode::Supported> for a list of supported encodings.
 
 =head1 FUNCTIONS
 
-All functions are exported by default or individually.
+All functions are exported by name, as well as via the tags C<:all>,
+C<:strict>, and C<:lax>. By default, L</"encode"> and L</"decode"> are
+exported.
 
 =head2 encode
 
   my $bytes = encode $encoding, $characters;
-  my $bytes = encode $encoding, $characters, 1;
 
 Encodes the input string of characters into a byte string using C<$encoding>.
 Throws an exception if the input string contains characters that cannot be
-represented in C<$encoding>. If the optional third argument is a true value,
-any invalid characters will be encoded as a substitution character instead (the
-substitution character used depends on the encoding).
+represented in C<$encoding>.
+
+=head2 encode_lax
+
+  my $bytes = encode_lax $encoding, $characters;
+
+Encodes the input string of characters as in L</"encode">, but instead of
+throwing an exception on invalid input, any invalid characters are encoded as a
+substitution character (the substitution character used depends on the
+encoding).
 
 =head2 decode
 
   my $characters = decode $encoding, $bytes;
-  my $characters = decode $encoding, $bytes, 1;
 
 Decodes the input byte string into a string of characters using C<$encoding>.
-Throws an exception if the input bytes are not valid in C<$encoding>. If the
-optional third argument is a true value, any malformed bytes will be decoded to
-the Unicode replacement character (U+FFFD) instead.
+Throws an exception if the input bytes are not valid in C<$encoding>.
+
+=head2 decode_lax
+
+  my $characters = decode_lax $encoding, $bytes;
+
+Decodes the input byte string as in L</"decode">, but instead of throwing an
+exception on invalid input, any malformed bytes will be decoded to the Unicode
+replacement character (U+FFFD).
 
 =head1 BUGS
 
