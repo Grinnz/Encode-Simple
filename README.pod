@@ -9,8 +9,8 @@ Encode::Simple - Encode and decode text, simply
   use Encode::Simple qw(encode decode encode_lax decode_lax);
   my $characters = decode 'cp1252', $bytes;
   my $characters = decode_lax 'UTF-8', $bytes;
-  my $bytes = encode 'shiftjis', $characters;
-  my $bytes = encode_lax 'ascii', $characters;
+  my $bytes = encode 'Shift_JIS', $characters;
+  my $bytes = encode_lax 'ASCII', $characters;
 
 =head1 DESCRIPTION
 
@@ -39,7 +39,8 @@ or possible to represent in C<$encoding>.
 Encodes the input string of characters as in L</"encode">, but instead of
 throwing an exception on invalid input, any invalid characters are encoded as a
 substitution character (the substitution character used depends on the
-encoding).
+encoding). Note that some encoders do not respect this option so will throw an
+exception anyway, this notably includes L<Encode::Unicode> (but not UTF-8).
 
 =head2 decode
 
@@ -54,7 +55,9 @@ Throws an exception if the input bytes are not valid for C<$encoding>.
 
 Decodes the input byte string as in L</"decode">, but instead of throwing an
 exception on invalid input, any malformed bytes will be decoded to the Unicode
-replacement character (U+FFFD).
+replacement character (U+FFFD). Note that some encoders do not respect this
+option so will throw an exception anyway, this notably includes
+L<Encode::Unicode> (but not UTF-8).
 
 =head1 BUGS
 
