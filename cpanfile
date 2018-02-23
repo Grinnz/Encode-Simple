@@ -1,4 +1,4 @@
-requires 'perl' => '5.006';
+requires 'perl' => '5.008001';
 requires 'Carp';
 requires 'Encode' => '1.50';
 requires 'Exporter' => '5.57';
