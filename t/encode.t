@@ -45,4 +45,32 @@ my $replacement_ascii = 'a?b?';
 is encode_lax('ASCII', $copy = $invalid_ascii, 1), $replacement_ascii, 'invalid lax ascii';
 is $invalid_ascii, $copy, 'original string unmodified';
 
+# Encode::Unicode
+my $surrogate_characters = "\N{U+D800}\N{U+DFFF}\N{U+2603}";
+my $surrogate_bytes = "\x00\x00\x00\x00\x26\x03";
+
+my $warnings;
+{
+  local $SIG{__WARN__} = sub { $warnings = shift };
+  ok !eval { encode('UTF-16BE', $copy = $surrogate_characters); 1 }, 'surrogate characters encode to UTF-16';
+}
+is $surrogate_characters, $copy, 'original string unmodified';
+is $warnings, undef, 'no warnings';
+
+undef $warnings;
+{
+  local $SIG{__WARN__} = sub { $warnings = shift };
+  is encode_lax('UTF-16BE', $copy = $surrogate_characters), $surrogate_bytes, 'surrogate characters lax encode to UTF-16';
+}
+is $surrogate_characters, $copy, 'original string unmodified';
+is $warnings, undef, 'no warnings';
+
+undef $warnings;
+{
+  local $SIG{__WARN__} = sub { $warnings = shift };
+  ok !eval { encode('UTF-16BE', $copy = $invalid_characters); 1 }, 'invalid encode to UTF-16';
+}
+is $invalid_characters, $copy, 'original string unmodified';
+is $warnings, undef, 'no warnings';
+
 done_testing;

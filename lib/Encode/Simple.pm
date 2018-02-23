@@ -22,7 +22,9 @@ sub encode {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->encode("$input", MASK_STRICT); 1 }) { $error = $@ || 'Error' } }
+  { local $@; use warnings FATAL => 'utf8'; # Encode::Unicode throws warnings in this category
+    unless (eval { $output = $obj->encode("$input", MASK_STRICT); 1 }) { $error = $@ || 'Error' }
+  }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -32,7 +34,9 @@ sub encode_lax {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->encode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' } }
+  { local $@; no warnings 'utf8'; # Encode::Unicode throws warnings in this category
+    unless (eval { $output = $obj->encode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' }
+  }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -42,7 +46,9 @@ sub decode {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->decode("$input", MASK_STRICT); 1 }) { $error = $@ || 'Error' } }
+  { local $@; use warnings FATAL => 'utf8'; # Encode::Unicode throws warnings in this category
+    unless (eval { $output = $obj->decode("$input", MASK_STRICT); 1 }) { $error = $@ || 'Error' }
+  }
   _rethrow($error) if defined $error;
   return $output;
 }
@@ -52,7 +58,9 @@ sub decode_lax {
   return undef unless defined $input;
   my $obj = $ENCODINGS{$encoding} || _find_encoding($encoding);
   my ($output, $error);
-  { local $@; unless (eval { $output = $obj->decode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' } }
+  { local $@; no warnings 'utf8'; # Encode::Unicode throws warnings in this category
+    unless (eval { $output = $obj->decode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' }
+  }
   _rethrow($error) if defined $error;
   return $output;
 }
