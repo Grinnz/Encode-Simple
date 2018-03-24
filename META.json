@@ -39,7 +39,7 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
-            "Encode" : "2.87",
+            "Encode" : "2.85",
             "Exporter" : "5.57",
             "perl" : "5.008001"
          }

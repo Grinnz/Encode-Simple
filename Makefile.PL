@@ -18,7 +18,7 @@ my %WriteMakefileArgs = (
   "NAME" => "Encode::Simple",
   "PREREQ_PM" => {
     "Carp" => 0,
-    "Encode" => "2.87",
+    "Encode" => "2.85",
     "Exporter" => "5.57"
   },
   "TEST_REQUIRES" => {
@@ -35,7 +35,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Carp" => 0,
-  "Encode" => "2.87",
+  "Encode" => "2.85",
   "Exporter" => "5.57",
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
