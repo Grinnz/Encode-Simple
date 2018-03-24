@@ -39,7 +39,7 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
-            "Encode" : "1.50",
+            "Encode" : "2.40",
             "Exporter" : "5.57",
             "perl" : "5.008001"
          }
@@ -58,7 +58,7 @@
    "provides" : {
       "Encode::Simple" : {
          "file" : "lib/Encode/Simple.pm",
-         "version" : "0.002"
+         "version" : "0.003"
       }
    },
    "release_status" : "stable",
@@ -73,7 +73,7 @@
          "web" : "https://github.com/Grinnz/Encode-Simple"
       }
    },
-   "version" : "0.002",
+   "version" : "0.003",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.026001"
@@ -262,7 +262,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "v0.002",
+                  "tag" : "v0.003",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v"
                },
@@ -468,7 +468,7 @@
          {
             "class" : "Dist::Zilla::Plugin::InstallGuide",
             "name" : "@Author::DBOOK/InstallGuide",
-            "version" : "1.200007"
+            "version" : "1.200009"
          },
          {
             "class" : "Dist::Zilla::Plugin::Manifest",
@@ -557,6 +557,6 @@
    "x_contributors" : [
       "Dan Book <grinnz@grinnz.com>"
    ],
-   "x_serialization_backend" : "Cpanel::JSON::XS version 4.01"
+   "x_serialization_backend" : "Cpanel::JSON::XS version 4.02"
 }
 
