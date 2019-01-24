@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.003     2019-01-24 17:07:44 EST
   - Fix Encode::Unicode test to not rely on how invalid characters are encoded,
     since this changed in Encode 2.99.
 
