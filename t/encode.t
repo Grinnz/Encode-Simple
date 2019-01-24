@@ -47,7 +47,7 @@ is $invalid_ascii, $copy, 'original string unmodified';
 
 # Encode::Unicode
 my $surrogate_characters = "\N{U+D800}\N{U+DFFF}\N{U+2603}";
-my $surrogate_bytes = "\x00\x00\x00\x00\x26\x03";
+my $surrogate_bytes = qr/\A....\x26\x03\z/;
 
 my $warnings;
 {
@@ -60,7 +60,7 @@ is $warnings, undef, 'no warnings';
 undef $warnings;
 {
   local $SIG{__WARN__} = sub { $warnings = shift };
-  is encode_lax('UTF-16BE', $copy = $surrogate_characters), $surrogate_bytes, 'surrogate characters lax encode to UTF-16';
+  like encode_lax('UTF-16BE', $copy = $surrogate_characters), $surrogate_bytes, 'surrogate characters lax encode to UTF-16';
 }
 is $surrogate_characters, $copy, 'original string unmodified';
 is $warnings, undef, 'no warnings';
