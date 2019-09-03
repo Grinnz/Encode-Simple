@@ -66,13 +66,17 @@ sub encode_utf8 {
 sub encode_utf8_lax {
   my ($input) = @_;
   return undef unless defined $input;
+  my ($output, $error);
   if (HAS_UNICODE_UTF8) {
-    no warnings 'utf8'; # Unicode::UTF8 throws warnings in this category
-    return scalar Unicode::UTF8::encode_utf8($input);
+    local $@; no warnings 'utf8'; # Unicode::UTF8 throws warnings in this category
+    unless (eval { $output = Unicode::UTF8::encode_utf8($input); 1 }) { $error = $@ || 'Error' }
   } else {
     my $obj = $ENCODINGS{'UTF-8'} || _find_encoding('UTF-8');
-    return scalar $obj->encode("$input", MASK_LAX);
+    local $@;
+    unless (eval { $output = $obj->encode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' }
   }
+  _rethrow($error) if defined $error;
+  return $output;
 }
 
 sub decode {
@@ -120,12 +124,15 @@ sub decode_utf8_lax {
   return undef unless defined $input;
   my ($output, $error);
   if (HAS_UNICODE_UTF8) {
-    no warnings 'utf8'; # Unicode::UTF8 throws warnings in this category
-    return scalar Unicode::UTF8::decode_utf8($input);
+    local $@; no warnings 'utf8'; # Unicode::UTF8 throws warnings in this category
+    unless (eval { $output = Unicode::UTF8::decode_utf8($input); 1 }) { $error = $@ || 'Error' }
   } else {
     my $obj = $ENCODINGS{'UTF-8'} || _find_encoding('UTF-8');
-    return scalar $obj->decode("$input", MASK_LAX);
+    local $@;
+    unless (eval { $output = $obj->decode("$input", MASK_LAX); 1 }) { $error = $@ || 'Error' }
   }
+  _rethrow($error) if defined $error;
+  return $output;
 }
 
 sub _find_encoding {
