@@ -20,3 +20,4 @@ matrix:
     dist: trusty
   - perl: "5.8"
     dist: trusty
+install: cpanm --quiet --installdeps --notest --with-recommends .
