@@ -214,7 +214,7 @@ L</"encode"> with an encoding of C<UTF-8>.
 
 Encodes the input string of characters into a UTF-8 byte string, encoding any
 invalid characters as the Unicode replacement character C<U+FFFD>, represented
-in UTF-8 as the three bytes L<0xEFBFBD>.
+in UTF-8 as the three bytes C<0xEFBFBD>.
 
 This function will use the more consistent and efficient
 L<Unicode::UTF8/"encode_utf8"> if installed, and is otherwise equivalent to
