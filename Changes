@@ -1,4 +1,9 @@
 {{$NEXT}}
+  - Add encode_utf8/lax and decode_utf8/lax functions that will always use the
+    correct UTF-8 encoding unlike the functions in Encode, and will use
+    Unicode::UTF8 if installed. The new functions are now included in the
+    appropriate :strict and :lax tags, and encode_utf8 and decode_utf8 are
+    exported by default.
 
 0.003     2019-01-24 17:07:44 EST
   - Fix Encode::Unicode test to not rely on how invalid characters are encoded,
