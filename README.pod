@@ -56,7 +56,8 @@ possible to represent in UTF-8.
 
 This function will use the more consistent and efficient
 L<Unicode::UTF8/"encode_utf8"> if installed, and is otherwise equivalent to
-L</"encode"> with an encoding of C<UTF-8>.
+L</"encode"> with an encoding of C<UTF-8>. It is B<not> equivalent to
+L<Encode/"encode_utf8">, which should be avoided.
 
 =head2 encode_utf8_lax
 
@@ -70,7 +71,8 @@ in UTF-8 as the three bytes C<0xEFBFBD>.
 
 This function will use the more consistent and efficient
 L<Unicode::UTF8/"encode_utf8"> if installed, and is otherwise equivalent to
-L</"encode_lax"> with an encoding of C<UTF-8>.
+L</"encode_lax"> with an encoding of C<UTF-8>. It is B<not> equivalent to
+L<Encode/"encode_utf8">, which should be avoided.
 
 =head2 decode
 
@@ -99,7 +101,8 @@ exception if the input bytes are not valid for UTF-8.
 
 This function will use the more consistent and efficient
 L<Unicode::UTF8/"decode_utf8"> if installed, and is otherwise equivalent to
-L</"decode"> with an encoding of C<UTF-8>.
+L</"decode"> with an encoding of C<UTF-8>. It is B<not> equivalent to
+L<Encode/"decode_utf8">, which should be avoided.
 
 =head2 decode_utf8_lax
 
@@ -112,7 +115,8 @@ malformed bytes to the Unicode replacement character C<U+FFFD>.
 
 This function will use the more consistent and efficient
 L<Unicode::UTF8/"decode_utf8"> if installed, and is otherwise equivalent to
-L</"decode_lax"> with an encoding of C<UTF-8>.
+L</"decode_lax"> with an encoding of C<UTF-8>. It is B<not> equivalent to
+L<Encode/"decode_utf8">, which should be avoided.
 
 =head1 BUGS
 
