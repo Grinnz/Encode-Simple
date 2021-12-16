@@ -1,4 +1,5 @@
 {{$NEXT}}
+  - Avoid attempting lax decode via Encode::Unicode in tests as it often throws exceptions.
 
 1.001     2021-12-11 14:05:59 EST
   - New module Decode::ARGV as a better alternative to the -CA option for perl.
