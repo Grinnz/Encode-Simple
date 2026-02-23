@@ -1,5 +1,6 @@
 {{$NEXT}}
   - Remove tests for noncharacters as these are no longer prohibited for interchange in UTF-8.
+  - Fix Decode::ARGV import tests on Perl 5.12.
 
 1.002     2021-12-15 19:52:14 EST
   - Avoid attempting lax decode via Encode::Unicode in tests as it often throws exceptions.
