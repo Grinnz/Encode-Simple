@@ -5,7 +5,7 @@ runtime:
     Encode: '2.85'
     Exporter: '5.57'
   recommends:
-    Unicode::UTF8: 0
+    Unicode::UTF8: '0.64'
 test:
   requires:
     Test::More: '0.96'
@@ -13,4 +13,4 @@ test:
     Test::Without::Module: 0
 develop:
   requires:
-    Unicode::UTF8: 0
+    Unicode::UTF8: '0.64'

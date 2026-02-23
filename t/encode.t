@@ -31,7 +31,7 @@ is decode_utf8_lax($copy = $bytes), $characters, 'decode_utf8_lax';
 is $bytes, $copy, 'original bytes unmodified';
 
 # invalid encode/decode
-my $invalid_characters = do { no warnings 'utf8'; "\N{U+D800}\N{U+DFFF}\N{U+110000}\N{U+2603}\N{U+FDD0}\N{U+1FFFF}" };
+my $invalid_characters = do { no warnings 'utf8'; "\N{U+D800}\N{U+DFFF}\N{U+110000}\N{U+2603}" };
 
 ok !eval { encode('UTF-8', $copy = $invalid_characters); 1 }, 'invalid encode errored';
 is $invalid_characters, $copy, 'original string unmodified';
@@ -48,7 +48,7 @@ ok !eval { decode_utf8($copy = $invalid_bytes); 1 }, 'invalid decode_utf8 errore
 is $invalid_bytes, $copy, 'original string unmodified';
 
 # invalid lax encode/decode
-my $replacement_bytes = "\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd\xe2\x98\x83\xef\xbf\xbd\xef\xbf\xbd";
+my $replacement_bytes = "\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd\xe2\x98\x83";
 
 is encode_lax('UTF-8', $copy = $invalid_characters), $replacement_bytes, 'invalid lax encode';
 is $invalid_characters, $copy, 'original string unmodified';
